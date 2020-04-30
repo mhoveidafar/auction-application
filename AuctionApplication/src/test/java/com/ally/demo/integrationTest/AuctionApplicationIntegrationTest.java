@@ -27,7 +27,7 @@ public class AuctionApplicationIntegrationTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void testPostAuctionItem() {
+    public void test_PostAuctionItem() {
 
         AuctionItem requestedAuctionItem = AuctionItem.builder()
                 .reservePrice(2500)
@@ -44,7 +44,7 @@ public class AuctionApplicationIntegrationTest {
     }
 
     @Test
-    public void testGetAuctionItem() {
+    public void test_GetAuctionItem() {
 
         ResponseEntity<List> response = restTemplate.getForEntity(
                 "http://localhost:" + port + "/auctionItems", List.class);
@@ -53,7 +53,7 @@ public class AuctionApplicationIntegrationTest {
     }
 
     @Test
-    public void testGetAuctionItemById() {
+    public void test_GetAuctionItemById() {
 
         AuctionItem requestedAuctionItem = AuctionItem.builder()
                 .reservePrice(2500)
@@ -73,7 +73,7 @@ public class AuctionApplicationIntegrationTest {
     }
 
     @Test
-    public void testPostBid() {
+    public void test_PostBid() {
 
         AuctionItem requestedAuctionItem = AuctionItem.builder()
                 .reservePrice(2500)

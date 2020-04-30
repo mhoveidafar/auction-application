@@ -1,8 +1,8 @@
 package com.ally.demo.exception;
 
-public class NotFoundException extends RuntimeException {
+public class NotFoundException extends CustomHttpException {
 
     public NotFoundException(int id) {
-        super("item with id:" + id + " not found");
+        super(404, "item with id:" + id + " not found");
     }
 }

@@ -45,31 +45,33 @@
 
     <div class=row>
         <form class="col-sm-6" [formGroup]="auctionItemForm" (ngSubmit)="onAuctionItemSubmission()">
-            <div class="col-sm-6">
+            <div class="col-sm-8">
                 <label>Item Id</label>
                 <input formControlName="itemId" class="form-control" placeholder="Enter Item ID">
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-8">
                 <label>Item Description</label>
                 <input formControlName="itemDescription" class="form-control" placeholder="Enter Item Description">
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-8">
                 <label>Reserve Price</label>
-                <input formControlName="reservePrice" class="form-control" placeholder="Enter Reserve Price">
+                <input formControlName="reservePrice" class="form-control" placeholder="Enter Reserve Price"
+                    type="number">
             </div>
-            <button type="submit" class="btn btn-primary mt-4 btn-spacing">Create Auction Item</button>
+            <button type=" submit" class="btn btn-primary mt-4 btn-spacing">Create Auction Item</button>
         </form>
 
         <form class="col-sm-6" [formGroup]="bidForm" (ngSubmit)="onBidSubmission()">
-            <div class="col-sm-6">
+            <div class="col-sm-8">
                 <label>Auction Item ID</label>
-                <input formControlName="auctionItemId" class="form-control" placeholder="Enter Auction Item ID">
+                <input formControlName="auctionItemId" class="form-control" placeholder="Enter Auction Item ID"
+                    type="number">
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-8">
                 <label>Max Auto Bid Amount</label>
                 <input formControlName="maxAutoBidAmount" class="form-control" placeholder="Enter Max Auto Bid Amount">
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-8">
                 <label>Bidder Name</label>
                 <input formControlName="bidderName" class="form-control" placeholder="Enter Bidder Name">
             </div>

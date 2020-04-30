@@ -3,6 +3,7 @@ package com.ally.demo.service;
 import com.ally.demo.domain.AuctionItem;
 import com.ally.demo.domain.Bid;
 import com.ally.demo.exception.NotFoundException;
+import com.ally.demo.exception.ValidationException;
 import com.ally.demo.repository.AuctionItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,12 +55,10 @@ public class AuctionItemService {
 
             saveAuctionItem(auctionItem);
             if (bid.getMaxAutoBidAmount() < auctionItem.getReservePrice()) {
-                throw new RuntimeException("Raise your bid. You have not met the reserve price");
+                throw new ValidationException("Raise your bid. You have not met the reserve price");
             }
         } else {
-            throw new RuntimeException("Your bid is less than current bid");
+            throw new ValidationException("Your bid is less than current bid");
         }
-
-
     }
 }

@@ -2,8 +2,11 @@ package com.ally.demo.controller;
 
 import com.ally.demo.domain.AuctionItem;
 import com.ally.demo.domain.Bid;
+import com.ally.demo.exception.CustomHttpException;
 import com.ally.demo.exception.NotFoundException;
 import com.ally.demo.service.AuctionItemService;
+import com.ally.demo.validation.AuctionItemValidation;
+import com.ally.demo.validation.BidValidation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -22,12 +25,23 @@ public class AuctionItemController {
     private final Logger log = LoggerFactory.getLogger(AuctionItemController.class);
 
     @Autowired
+    AuctionItemValidation auctionItemValidation;
+
+    @Autowired
+    BidValidation bidValidation;
+
+    @Autowired
     AuctionItemService auctionItemService;
 
     @PostMapping("/auctionItems")
     public ResponseEntity<Map<String, Integer>> addAuctionItem(@RequestBody AuctionItem auctionItem) {
-        Map<String, Integer> resultMap = auctionItemService.saveAuctionItem(auctionItem);
-        return new ResponseEntity(resultMap, HttpStatus.OK);
+        try {
+            auctionItemValidation.validate(auctionItem);
+            Map<String, Integer> resultMap = auctionItemService.saveAuctionItem(auctionItem);
+            return new ResponseEntity(resultMap, HttpStatus.OK);
+        } catch (CustomHttpException e) {
+            return new ResponseEntity(e.getReason(), HttpStatus.valueOf(e.getStatus()));
+        }
     }
 
     @GetMapping("/auctionItems")
@@ -41,21 +55,20 @@ public class AuctionItemController {
         try {
             AuctionItem auctionItem = auctionItemService.retrieveAuctionItemById(id);
             return new ResponseEntity(auctionItem, HttpStatus.OK);
-        }
-        catch (NotFoundException e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (NotFoundException e) {
+            return new ResponseEntity(e.getReason(), HttpStatus.valueOf(e.getStatus()));
         }
     }
 
     @PostMapping("/bids")
     public ResponseEntity<Void> putBid(@RequestBody Bid bid) throws JsonProcessingException {
-        log.info("bid submitted"+ new ObjectMapper().writeValueAsString(bid));
         try {
+            bidValidation.validate(bid);
+            log.info("bid submitted" + new ObjectMapper().writeValueAsString(bid));
             auctionItemService.placeBid(bid);
             return new ResponseEntity(HttpStatus.NO_CONTENT);
-        }
-        catch (RuntimeException e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (CustomHttpException e) {
+            return new ResponseEntity(e.getReason(), HttpStatus.valueOf(e.getStatus()));
         }
     }
 }

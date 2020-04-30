@@ -3,6 +3,7 @@ package com.ally.demo.service;
 import com.ally.demo.domain.AuctionItem;
 import com.ally.demo.domain.Bid;
 import com.ally.demo.exception.NotFoundException;
+import com.ally.demo.exception.ValidationException;
 import com.ally.demo.repository.AuctionItemRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +42,7 @@ public class AuctionItemServiceTest {
     }
 
     @Test
-    public void saveAuctionItem() {
+    public void test_saveAuctionItem() {
         AuctionItem expectedAuctionItem = AuctionItem.builder()
                 .auctionItemId(1)
                 .build();
@@ -56,7 +57,7 @@ public class AuctionItemServiceTest {
     }
 
     @Test
-    public void retrieveAuctionItems() {
+    public void test_retrieveAuctionItems() {
 
         List<AuctionItem> expectedList = new ArrayList<>();
         expectedList.add(auctionItem);
@@ -68,7 +69,7 @@ public class AuctionItemServiceTest {
     }
 
     @Test
-    public void retrieveAuctionItemById() {
+    public void test_retrieveAuctionItemById() {
 
         when(auctionItemRepository.findById(1)).thenReturn(Optional.ofNullable(auctionItem));
 
@@ -84,7 +85,7 @@ public class AuctionItemServiceTest {
     }
 
     @Test
-    public void placeBid() {
+    public void test_placeBid() {
 
         Bid bid = Bid.builder()
                 .auctionItemId(1)
@@ -114,8 +115,8 @@ public class AuctionItemServiceTest {
         assertEquals(expectedAuctionItem, actualArgument);
     }
 
-    @Test(expected = RuntimeException.class)
-    public void placeBid_throwsException_forReservePrice() {
+    @Test(expected = ValidationException.class)
+    public void test_placeBid_throwsException_forReservePrice() {
 
         Bid bid = Bid.builder()
                 .auctionItemId(1)
@@ -134,8 +135,8 @@ public class AuctionItemServiceTest {
         auctionItemService.placeBid(bid);
     }
 
-    @Test(expected = RuntimeException.class)
-    public void placeBid_throwsException_forLessThanCurrent() {
+    @Test(expected = ValidationException.class)
+    public void test_placeBid_throwsException_forLessThanCurrent() {
 
         Bid bid = Bid.builder()
                 .auctionItemId(1)

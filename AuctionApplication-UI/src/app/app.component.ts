@@ -70,21 +70,27 @@ export class AppComponent implements OnInit {
 
         this.saveAuctionItems(auctionItem).subscribe(response => {
             this.getAuctionItems().subscribe(data => this.auctionItemList = data)
-        })
+        }, err => {
+            alert(err.error);
+        }
+
+        )
     }
 
     onBidSubmission() {
+        let currentBidderName;
+        let payable;
         const auctionItemId = this.fbid.auctionItemId.value;
         const maxAutoBidAmount = this.fbid.maxAutoBidAmount.value;
         const bidderName = this.fbid.bidderName.value;
         const bid = new Bid(auctionItemId, maxAutoBidAmount, bidderName);
 
         const currentItem: AuctionItem[] = this.auctionItemList.filter(item => item.auctionItemId == auctionItemId)
-        const currenBidAmount = currentItem[0].currentBid;
-        const currentBidderName = currentItem[0].bidderName;
-
-        const payable = currenBidAmount + 1;
-
+        if (currentItem.length > 0) {
+            const currenBidAmount = currentItem[0].currentBid;
+            currentBidderName = currentItem[0].bidderName;
+            payable = currenBidAmount + 1;
+        }
         this.bidForm.reset()
 
         this.placeBid(bid).subscribe(response => {
@@ -95,10 +101,8 @@ export class AppComponent implements OnInit {
                 this.auctionItemList = data
             })
         }, err => {
-            if (err.status === 400) {
-                this.getAuctionItems().subscribe(data => this.auctionItemList = data)
-                alert(err.error);
-            }
+            this.getAuctionItems().subscribe(data => this.auctionItemList = data)
+            alert(err.error);
         }
         )
 

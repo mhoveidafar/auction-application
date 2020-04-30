@@ -2,8 +2,11 @@ package com.ally.demo.controller;
 
 import com.ally.demo.domain.AuctionItem;
 import com.ally.demo.domain.Bid;
+import com.ally.demo.domain.Item;
 import com.ally.demo.exception.NotFoundException;
+import com.ally.demo.exception.ValidationException;
 import com.ally.demo.service.AuctionItemService;
+import com.ally.demo.validation.BidValidation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,9 +39,17 @@ public class AuctionItemControllerTest {
     @MockBean
     private AuctionItemService auctionItemService;
 
+    @MockBean
+    private BidValidation bidValidation;
+
     @Test
-    public void addAuctionItem() throws Exception {
-        AuctionItem auctionItem = AuctionItem.builder().build();
+    public void test_addAuctionItem() throws Exception {
+        AuctionItem auctionItem = AuctionItem.builder()
+                .reservePrice(200)
+                .item(Item.builder()
+                        .itemId("product")
+                        .build())
+                .build();
         Map result = new HashMap();
         result.put("auctionItemId", 1);
         when(auctionItemService.saveAuctionItem(auctionItem)).thenReturn(result);
@@ -51,7 +62,7 @@ public class AuctionItemControllerTest {
     }
 
     @Test
-    public void getAllAuctionItems() throws Exception {
+    public void test_getAllAuctionItems() throws Exception {
         List result = new ArrayList<>();
         result.add(AuctionItem.builder().build());
         when(auctionItemService.retrieveAuctionItems()).thenReturn(result);
@@ -62,7 +73,7 @@ public class AuctionItemControllerTest {
     }
 
     @Test
-    public void getAuctionItemById() throws Exception {
+    public void test_getAuctionItemById() throws Exception {
         AuctionItem auctionItem = AuctionItem.builder().build();
         when(auctionItemService.retrieveAuctionItemById(1)).thenReturn(auctionItem);
 
@@ -72,7 +83,7 @@ public class AuctionItemControllerTest {
     }
 
     @Test
-    public void getAuctionItemById_Throws404() throws Exception {
+    public void test_getAuctionItemById_Throws404() throws Exception {
         AuctionItem auctionItem = AuctionItem.builder().build();
         when(auctionItemService.retrieveAuctionItemById(1)).thenThrow(new NotFoundException(1));
 
@@ -82,8 +93,12 @@ public class AuctionItemControllerTest {
     }
 
     @Test
-    public void putBid() throws Exception {
-        Bid bid = Bid.builder().build();
+    public void test_putBid() throws Exception {
+        Bid bid = Bid.builder()
+                .auctionItemId(1)
+                .maxAutoBidAmount(200)
+                .bidderName("fake bidder")
+                .build();
         doNothing().when(auctionItemService).placeBid(bid);
 
         this.mockMvc.perform(post("/bids")
@@ -93,9 +108,13 @@ public class AuctionItemControllerTest {
     }
 
     @Test
-    public void putBid_Throws400() throws Exception {
-        Bid bid = Bid.builder().build();
-        doThrow(new RuntimeException("Raise your bid. You have not met the reserve price"))
+    public void test_putBid_Throws400_ForReservePriceCriteria() throws Exception {
+        Bid bid = Bid.builder()
+                .auctionItemId(1)
+                .maxAutoBidAmount(200)
+                .bidderName("fake bidder")
+                .build();
+        doThrow(new ValidationException("Raise your bid. You have not met the reserve price"))
                 .when(auctionItemService).placeBid(bid);
 
         this.mockMvc.perform(post("/bids")
@@ -103,5 +122,18 @@ public class AuctionItemControllerTest {
                 .content(new ObjectMapper().writeValueAsString(bid)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Raise your bid. You have not met the reserve price"));
+    }
+
+    @Test
+    public void test_putBid_Throws400_ForValidation() throws Exception {
+        Bid bid = Bid.builder().build();
+        doThrow(new ValidationException("Bidder name cannot be blank"))
+                .when(bidValidation).validate(bid);
+
+        this.mockMvc.perform(post("/bids")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(bid)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Bidder name cannot be blank"));
     }
 }

@@ -1,0 +1,79 @@
+<div class="ml-4 mr-4">
+    <h1 class="text-center">Auction Application</h1>
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>
+                Auction Item ID
+            </th>
+            <th>
+                Reserve Price
+            </th>
+            <th>
+                Item ID
+            </th>
+            <th>
+                Item Description
+            </th>
+            <th>
+                Bidder Name
+            </th>
+            <th>
+                Current Bid
+            </th>
+        </tr>
+        <tr *ngFor="let auctionItem of auctionItemList">
+            <td>
+                {{auctionItem.auctionItemId}}
+            </td>
+            <td>
+                {{auctionItem.reservePrice}}
+            </td>
+            <td>
+                {{auctionItem.item.itemId}}
+            </td>
+            <td>
+                {{auctionItem.item.description}}
+            </td>
+            <td>
+                {{auctionItem.bidderName}}
+            </td>
+            <td>
+                {{auctionItem.currentBid}}
+            </td>
+        </tr>
+    </table>
+
+    <div class=row>
+        <form class="col-sm-6" [formGroup]="auctionItemForm" (ngSubmit)="onAuctionItemSubmission()">
+            <div class="col-sm-6">
+                <label>Item Id</label>
+                <input formControlName="itemId" class="form-control" placeholder="Enter Item ID">
+            </div>
+            <div class="col-sm-6">
+                <label>Item Description</label>
+                <input formControlName="itemDescription" class="form-control" placeholder="Enter Item Description">
+            </div>
+            <div class="col-sm-6">
+                <label>Reserve Price</label>
+                <input formControlName="reservePrice" class="form-control" placeholder="Enter Reserve Price">
+            </div>
+            <button type="submit" class="btn btn-primary mt-4 btn-spacing">Create Auction Item</button>
+        </form>
+
+        <form class="col-sm-6" [formGroup]="bidForm" (ngSubmit)="onBidSubmission()">
+            <div class="col-sm-6">
+                <label>Auction Item ID</label>
+                <input formControlName="auctionItemId" class="form-control" placeholder="Enter Auction Item ID">
+            </div>
+            <div class="col-sm-6">
+                <label>Max Auto Bid Amount</label>
+                <input formControlName="maxAutoBidAmount" class="form-control" placeholder="Enter Max Auto Bid Amount">
+            </div>
+            <div class="col-sm-6">
+                <label>Bidder Name</label>
+                <input formControlName="bidderName" class="form-control" placeholder="Enter Bidder Name">
+            </div>
+            <button type="submit" class="btn btn-primary mt-4 btn-spacing">Place Bid</button>
+        </form>
+    </div>
+</div>

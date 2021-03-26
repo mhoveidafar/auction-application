@@ -1,0 +1,104 @@
+{
+	"info": {
+		"_postman_id": "44e22042-0dee-4a31-85b1-c7b1cd0d8feb",
+		"name": "Auction App",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "POST/auctionItems",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"reservePrice\":10450.00,\r\n   \"item\":{\r\n      \"itemId\":\"abcd\",\r\n      \"description\":\"item description\"\r\n   }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auctionItems",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auctionItems"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET/auctionItems",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/auctionItems",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auctionItems"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST/bids",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"auctionItemId\":2,\r\n   \"maxAutoBidAmount\":6000.00,\r\n   \"bidderName\":\"Jack\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/bids",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bids"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET/auctionItems/id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/auctionItems/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auctionItems",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
